@@ -300,15 +300,17 @@ namespace Exercises_2_Lexicon
             Console.WriteLine("Enter a number: ");
             string? input = Console.ReadLine();
             int intinput = Convert.ToInt32(input);
+            bool negativ = (intinput < 0) ? true : false;
+            intinput = (intinput < 0) ? -intinput : intinput;
             List<int> results = new List<int>();
 
             try
             {
-                for (int i = 0; i < intinput; i++)
+                for (int i = 1; i < intinput; i++)
                 {
                     if ((intinput % i) == 0)
                     {
-                        results.Add(i);
+                        results.Add(negativ ? -i : i);
                     }
                 }
 
@@ -320,6 +322,72 @@ namespace Exercises_2_Lexicon
             } catch (Exception)
             {
                 Console.WriteLine("Error happened.");
+            }
+        }
+
+        static void RunExerciseEighteen()
+        {
+            int[] ints = new int[10];
+            Random rnd = new Random();
+            double[] dbls = new double[ints.Length];
+
+            for (int i = 0; i < ints.Length; i++)
+            {
+                ints[i] = rnd.Next(1, 500);
+            }
+
+            for (int i = 0; i < dbls.Length; i++)
+            {
+                dbls[i] = 1 / (double)ints[i];
+            }
+
+            foreach (int i in ints)
+            {
+                Console.WriteLine("Intsarray: " + i);
+            }
+            foreach (double i in dbls)
+            {
+                Console.WriteLine("Dblsarray: " + i); // Yields '0' repeatedly, why?
+            }
+        }
+
+        public static Dictionary<int, int> AsChange(int amount)
+        { // Thanks to "Pobiega" from the C# Discord.
+            int[] _denominations = new int[] { 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1 };
+
+            if (amount < 0)
+                throw new ArgumentException("Can't calculate negative change.", nameof(amount));
+
+            var dict = new Dictionary<int, int>();
+
+            foreach (var denomination in _denominations)
+            {
+                if (amount < denomination)
+                    continue;
+
+                var count = amount / denomination;
+                dict.Add(denomination, count);
+                amount -= count * denomination;
+            }
+
+            return dict;
+        }
+
+        static void RunExerciseNineteen()
+        { // Thanks to "Pobiega" from the C# Discord.
+            int price = 150;
+            Console.WriteLine($"It'll cost you: {price}\nHow much are you providing?");
+            int input = Convert.ToInt32(Console.ReadLine());
+            int[] denominations = new int[] { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000 };
+
+            int retur = input - price; // Remainder. (Negative if insufficient).
+            Console.WriteLine("retur " + retur); // Print how much is owed.
+
+            var change = AsChange(retur);
+            foreach (var i in change)
+            {
+                Console.WriteLine($"{i.Value}x {i.Key}");
+
             }
         }
 
@@ -385,6 +453,12 @@ namespace Exercises_2_Lexicon
                             break;
                         case 15:
                             RunExerciseFifteen();
+                            break;
+                        case 18:
+                            RunExerciseEighteen();
+                            break;
+                        case 19:
+                            RunExerciseNineteen();
                             break;
                         case -1:
                             keepAlive = false;
