@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Exercises_2_Lexicon
 {
@@ -374,7 +376,7 @@ namespace Exercises_2_Lexicon
         }
 
         static void RunExerciseNineteen()
-        { // Thanks to "Pobiega" from the C# Discord.
+        { 
             int price = 150;
             Console.WriteLine($"It'll cost you: {price}\nHow much are you providing?");
             int input = Convert.ToInt32(Console.ReadLine());
@@ -383,12 +385,157 @@ namespace Exercises_2_Lexicon
             int retur = input - price; // Remainder. (Negative if insufficient).
             Console.WriteLine("retur " + retur); // Print how much is owed.
 
-            var change = AsChange(retur);
+            var change = AsChange(retur); // Thanks to "Pobiega" from the C# Discord.
             foreach (var i in change)
             {
                 Console.WriteLine($"{i.Value}x {i.Key}");
 
             }
+        }
+
+        static void RunExerciseTwentyOne()
+        {
+            Console.WriteLine("Input comma-separated numbers.");
+            string input = Console.ReadLine();
+
+            string[] values = input.Split(',');
+
+            int[] intValues = new int[values.Length];
+            
+            for (int i = 0; i < values.Length; i++)
+            {
+                intValues[i] = Convert.ToInt32(values[i]);
+            }
+
+            foreach (var value in intValues)
+            {
+                Console.WriteLine(value);
+            }
+            Console.WriteLine("Min: " + intValues.Min());
+            Console.WriteLine("Max: " + intValues.Max());
+            Console.WriteLine("Avg: " + intValues.Average());
+        }
+
+        static void RunExerciseTwentyTwo()
+        {
+            string[] banned = new string[]{ "fuck" , "balls" };
+
+            Console.WriteLine("Input a string: ");
+            string input = Console.ReadLine();
+            string output = "***";
+            string result = input;
+
+            for (int i = 0; i <= banned.Length; i++)
+            {
+                if (input.Contains(banned[i]))
+                {
+                    result = input.Replace(banned[i], output);
+                    Console.WriteLine(result);
+                } else if (!input.Contains(banned[i]))
+                {
+                    continue;
+                }
+            }
+        }
+
+        static int AskUserForValidInt()
+        {
+            Console.WriteLine("Input a valid integer: ");
+            string input = Console.ReadLine();
+            int result = 0;
+            try
+            {
+                result = Convert.ToInt32(input);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AskUserForValidInt();
+            }
+            return result;
+        }
+
+        static void RunExerciseTwentyFive()
+        {
+            int one = AskUserForValidInt();
+            int two = AskUserForValidInt();
+
+            try
+            {
+                int result = one / two;
+                Console.WriteLine(result);
+            } catch (DivideByZeroException ex)
+            {
+                Console.WriteLine(ex.Message);
+            } catch (FormatException ex)
+            {
+                Console.WriteLine(ex.Message);
+            } catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        static void RunExerciseTwentySix()
+        {
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Cookies));
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86));
+            Console.WriteLine(Environment.CurrentDirectory);
+
+            // Need administrative rights to write to 'Desktop'.
+            //var newFile = File.Create(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)).Close;
+            //Console.WriteLine(newFile);
+            
+        }
+
+        static void RunExerciseTwentySeven()
+        {
+            try
+            {
+                // Create an instance of StreamReader to read from a file.
+                // The using statement also closes the StreamReader.
+                using (StreamReader sr = new StreamReader("MyNames.txt"))
+                {
+                    string? line;
+                    // Read and display lines from the file until the end of
+                    // the file is reached.
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(line);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // Let the user know what went wrong.
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        static void RunExerciseTwentyEight()
+        {
+            string[] boys = new string[] { "Jens", "Emil", "Martin", "Anders", "Daniel" };
+            string[] girls = new string[] { "Sarah", "Camilla", "Jenny", "Frida", "Margit" };
+
+            StreamWriter swb = new StreamWriter("C:\\Users\\emila\\source\\repos\\Exercises_2_Lexicon\\boys.txt");
+            StreamWriter swg = new StreamWriter("C:\\Users\\emila\\source\\repos\\Exercises_2_Lexicon\\girls.txt");
+
+            foreach (string boy in boys)
+            {
+                swb.Write(boy + "\t");
+            }
+            foreach (string girl in girls)
+            {
+                swg.Write(girl + "\t");
+            }
+
+            swb.Close();
+            swg.Close();
+
         }
 
         static void Main(string[] args)
@@ -460,12 +607,30 @@ namespace Exercises_2_Lexicon
                         case 19:
                             RunExerciseNineteen();
                             break;
+                        case 21:
+                            RunExerciseTwentyOne();
+                            break;
+                        case 22:
+                            RunExerciseTwentyTwo();
+                            break;
+                        case 25:
+                            RunExerciseTwentyFive();
+                            break;
+                        case 26:
+                            RunExerciseTwentySix();
+                            break;
+                        case 27:
+                            RunExerciseTwentySeven();
+                            break;
+                        case 28:
+                            RunExerciseTwentyEight();
+                            break;
                         case -1:
                             keepAlive = false;
                             break;
                         default:
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("That is not a valid assignment number!");
+                            Console.WriteLine("This is the default switch-case.");
                             break;
                     }
                     Console.ResetColor();
@@ -473,10 +638,10 @@ namespace Exercises_2_Lexicon
                     Console.ReadKey();
                     Console.Clear();
                 }
-                catch
+                catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("That is not a valid assignment number!");
+                    Console.WriteLine("Caught an exception. " + ex.Message);
                     Console.ResetColor();
                 }
             }
